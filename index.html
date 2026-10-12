@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="雅思备考清单：八周 B 站公开课学习计划，含周目标、打卡、课程直达与艾宾浩斯复习队列。"
+    />
+    <meta name="theme-color" content="#f2efe7" />
+    <title>雅思备考清单｜8周公开课学习计划</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css?v=4" />
+    <script src="./app.js?v=3" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#mainContent">跳到主要内容</a>
+
+    <div class="site-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="返回今日计划">
+          <span class="brand-mark" aria-hidden="true">8W</span>
+          <span class="brand-copy">
+            <strong>雅思备考清单</strong>
+            <small>PUBLIC COURSE FIELD GUIDE</small>
+          </span>
+        </a>
+
+        <nav class="primary-nav" aria-label="主导航">
+          <button class="nav-button is-active" type="button" data-view="today">
+            今日
+          </button>
+          <button class="nav-button" type="button" data-view="plan">
+            8周计划
+          </button>
+          <button class="nav-button" type="button" data-view="method">
+            学习法
+          </button>
+          <button class="nav-button" type="button" data-view="review">
+            复习队列
+          </button>
+          <button class="nav-button" type="button" data-view="library">
+            课程库
+          </button>
+        </nav>
+
+        <div class="topbar-meta" aria-label="计划状态">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="headerStatus">计划进行中</span>
+        </div>
+      </header>
+
+      <main id="mainContent">
+        <section class="hero" aria-labelledby="pageTitle">
+          <div class="hero-copy">
+            <p class="eyebrow">8 WEEKS · 4 SKILLS · 1 SYSTEM</p>
+            <h1 id="pageTitle">
+              把公开课，变成<br />
+              <span>能执行的备考节奏。</span>
+            </h1>
+            <p class="hero-description">
+              一套面向 6.5–7.0 分目标的雅思自学路径。每周约 12–15 小时，
+              用公开视频完成输入，再用录音、限时写作与模考把知识变成能力。
+            </p>
+
+            <div class="plan-control" aria-label="计划设置">
+              <label for="startDate">
+                <span>计划起始日</span>
+                <input id="startDate" type="date" />
+              </label>
+              <button id="jumpToday" class="button button-dark" type="button">
+                查看今天
+                <span aria-hidden="true">↘</span>
+              </button>
+            </div>
+            <p class="control-note">修改日期后，未完成任务会自动重排；已完成课程按实际打卡日生成复习。</p>
+          </div>
+
+          <aside class="hero-dashboard" aria-label="学习进度概览">
+            <div class="dashboard-heading">
+              <span>总进度</span>
+              <span id="progressFraction">0 / 40 TASKS</span>
+            </div>
+            <div class="progress-orbit">
+              <svg viewBox="0 0 160 160" role="img" aria-labelledby="progressTitle">
+                <title id="progressTitle">计划完成进度</title>
+                <circle class="orbit-track" cx="80" cy="80" r="67"></circle>
+                <circle id="progressCircle" class="orbit-value" cx="80" cy="80" r="67"></circle>
+              </svg>
+              <div class="progress-number">
+                <strong id="progressPercent">0%</strong>
+                <span>COMPLETED</span>
+              </div>
+            </div>
+            <div class="dashboard-stats">
+              <div>
+                <strong id="studyHours">0.0</strong>
+                <span>已学小时</span>
+              </div>
+              <div>
+                <strong id="reviewCount">0</strong>
+                <span>完成复习</span>
+              </div>
+              <div>
+                <strong id="streakCount">0</strong>
+                <span>连续天数</span>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <section class="content-stage" aria-live="polite">
+          <section class="view is-visible" id="todayView" data-view-panel="today" aria-labelledby="todayHeading">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker" id="todayDate">TODAY</p>
+                <h2 id="todayHeading">今日作战面板</h2>
+              </div>
+              <div id="todayWeekBadge" class="week-badge">WEEK 01</div>
+            </div>
+
+            <div class="today-layout">
+              <div class="today-main">
+                <div class="focus-brief" id="focusBrief"></div>
+                <div class="task-stack" id="todayTasks"></div>
+              </div>
+              <aside class="today-side">
+                <div class="side-card side-card-ink">
+                  <div class="side-card-label">DUE FOR REVIEW</div>
+                  <strong id="dueReviewNumber">0</strong>
+                  <p>个记忆节点需要处理</p>
+                  <button class="text-button text-button-light" type="button" data-switch-view="review">
+                    打开复习队列 <span aria-hidden="true">→</span>
+                  </button>
+                </div>
+                <div class="side-card">
+                  <div class="side-card-label">TODAY'S RULE</div>
+                  <p class="rule-quote">先输出，再对答案。能回忆出来的内容，才真正属于你。</p>
+                  <div class="rule-meta">
+                    <span>主动回忆</span>
+                    <span>间隔复习</span>
+                    <span>限时输出</span>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </section>
+
+          <section class="view" id="planView" data-view-panel="plan" aria-labelledby="planHeading" hidden>
+            <div class="section-heading plan-heading-row">
+              <div>
+                <p class="section-kicker">THE 8-WEEK ROUTE</p>
+                <h2 id="planHeading">每周只攻一个关键变化</h2>
+              </div>
+              <p class="section-intro">
+                周一至周四完成四科主课，周六做整合输出，周五和周日留给自动生成的复习任务与机动补课。
+              </p>
+            </div>
+
+            <div class="week-rail" id="weekRail" role="tablist" aria-label="选择周次"></div>
+            <div class="week-detail" id="weekDetail"></div>
+          </section>
+
+          <section class="view" id="methodView" data-view-panel="method" aria-labelledby="methodHeading" hidden>
+            <div class="section-heading method-heading-row">
+              <div>
+                <p class="section-kicker">EBBINGHAUS EXECUTION SYSTEM</p>
+                <h2 id="methodHeading">艾宾浩斯刷课学习法</h2>
+              </div>
+              <p class="section-intro">
+                一次看懂并不等于掌握。每节课都要经历“输入—闭卷回忆—输出—间隔提取”，再按六个节点重复调用。
+              </p>
+            </div>
+
+            <div class="method-hero">
+              <div class="method-hero-copy">
+                <span class="method-tag">ONE INPUT · SIX RECALLS</span>
+                <h3>一次输入，<br />六次主动提取。</h3>
+                <p>
+                  艾宾浩斯遗忘曲线说明：未经提取的信息会快速衰退。这里把原理转换为可执行节奏，
+                  重点不是反复播放，而是在即将遗忘时关掉视频、主动说出或写出答案。
+                </p>
+                <button class="button button-light" type="button" data-switch-view="review">
+                  打开复习队列 <span aria-hidden="true">→</span>
+                </button>
+              </div>
+              <div class="memory-sequence" aria-label="艾宾浩斯六次复习节点">
+                <div class="memory-node is-immediate"><strong>T+20m</strong><span>即时提取</span><small>8 分钟</small></div>
+                <div class="memory-node"><strong>D+1</strong><span>快速复现</span><small>10 分钟</small></div>
+                <div class="memory-node"><strong>D+3</strong><span>结构复述</span><small>12 分钟</small></div>
+                <div class="memory-node"><strong>D+7</strong><span>闭卷小测</span><small>18 分钟</small></div>
+                <div class="memory-node"><strong>D+14</strong><span>跨题迁移</span><small>22 分钟</small></div>
+                <div class="memory-node"><strong>D+30</strong><span>稳固归档</span><small>25 分钟</small></div>
+              </div>
+            </div>
+
+            <section class="protocol-section" aria-labelledby="protocolHeading">
+              <div class="subsection-heading">
+                <div>
+                  <span>COURSE SOP</span>
+                  <h3 id="protocolHeading">一节课的正确刷法</h3>
+                </div>
+                <p>标准时长 90–120 分钟。先带着问题看，结束后必须产出一个可检查的结果。</p>
+              </div>
+              <div class="protocol-grid">
+                <article class="protocol-card">
+                  <span class="protocol-number">01</span>
+                  <strong>预设问题</strong>
+                  <em>5 MIN</em>
+                  <p>只看标题、目录和本周目标，写下本节必须解决的 2 个问题。</p>
+                  <small>完成标准：有两条明确问题</small>
+                </article>
+                <article class="protocol-card">
+                  <span class="protocol-number">02</span>
+                  <strong>连续刷课</strong>
+                  <em>40–90 MIN</em>
+                  <p>建议 1.25–1.5 倍速；只记录关键词和时间点，不逐字抄写。</p>
+                  <small>完成标准：最多暂停 3 次</small>
+                </article>
+                <article class="protocol-card protocol-card-accent">
+                  <span class="protocol-number">03</span>
+                  <strong>闭卷回忆</strong>
+                  <em>10 MIN</em>
+                  <p>关掉视频，用空白纸写出“3 个要点、2 个例子、1 个疑问”。</p>
+                  <small>完成标准：不回看也能复述主线</small>
+                </article>
+                <article class="protocol-card">
+                  <span class="protocol-number">04</span>
+                  <strong>科目输出</strong>
+                  <em>20–40 MIN</em>
+                  <p>完成录音、听写、造句或限时写作，产出必须能被复查。</p>
+                  <small>完成标准：留下一个作品</small>
+                </article>
+                <article class="protocol-card">
+                  <span class="protocol-number">05</span>
+                  <strong>记录并打卡</strong>
+                  <em>5 MIN</em>
+                  <p>写下唯一最大问题，然后在本项目打卡，自动解锁六次复习。</p>
+                  <small>完成标准：错误日志新增一条</small>
+                </article>
+              </div>
+            </section>
+
+            <section class="subject-method-section" aria-labelledby="subjectMethodHeading">
+              <div class="subsection-heading">
+                <div>
+                  <span>OUTPUT BY SKILL</span>
+                  <h3 id="subjectMethodHeading">四科必须这样输出</h3>
+                </div>
+                <p>艾宾浩斯负责安排时间，主动输出负责决定你到底记住了什么。</p>
+              </div>
+              <div class="subject-method-grid">
+                <article class="subject-method-card" data-subject-panel="vocabulary">
+                  <span>VOCAB / 词汇</span>
+                  <h4>看中文说英文，再放进句子</h4>
+                  <ol>
+                    <li>遮住英文回忆拼写与发音</li>
+                    <li>选 5 个词各造一个雅思句</li>
+                    <li>用 8–12 个词做 60 秒复述</li>
+                  </ol>
+                  <strong>验收：隔天正确率 ≥ 80%</strong>
+                </article>
+                <article class="subject-method-card" data-subject-panel="listening">
+                  <span>LISTEN / 听力</span>
+                  <h4>先做题，再定位错因</h4>
+                  <ol>
+                    <li>音频只播放一次完成题目</li>
+                    <li>错题归类为听音、定位、拼写</li>
+                    <li>关键句听写并影子跟读 3 遍</li>
+                  </ol>
+                  <strong>验收：能解释每个干扰项</strong>
+                </article>
+                <article class="subject-method-card" data-subject-panel="speaking">
+                  <span>SPEAK / 口语</span>
+                  <h4>录第一遍，分析后只重录一次</h4>
+                  <ol>
+                    <li>3 秒内开口，不写逐字稿</li>
+                    <li>标记停顿、重复和未展开位置</li>
+                    <li>替换 3 处表达后完整重录</li>
+                  </ol>
+                  <strong>验收：第二遍更清楚而非更长</strong>
+                </article>
+                <article class="subject-method-card" data-subject-panel="writing">
+                  <span>WRITE / 写作</span>
+                  <h4>限时成稿，再做结构性改写</h4>
+                  <ol>
+                    <li>3–8 分钟完成审题与列纲</li>
+                    <li>Task 1 / 2 严格限时 20 / 40 分钟</li>
+                    <li>隔天只重写最差的一个段落</li>
+                  </ol>
+                  <strong>验收：每次改写能说明原因</strong>
+                </article>
+              </div>
+            </section>
+
+            <section class="weekly-method" aria-labelledby="weeklyMethodHeading">
+              <div class="subsection-heading">
+                <div>
+                  <span>WEEKLY OPERATING RHYTHM</span>
+                  <h3 id="weeklyMethodHeading">把记忆法放进每一周</h3>
+                </div>
+                <button class="button button-dark button-compact" type="button" data-switch-view="plan">
+                  返回 8 周计划
+                </button>
+              </div>
+              <div class="weekly-rhythm-grid">
+                <div><strong>周一—周四</strong><span>每日一科新课</span><p>先清空到期复习，再完成当天主课；课后 20 分钟做第一次提取。</p></div>
+                <div><strong>周五</strong><span>只复习与补漏</span><p>处理 D+1、D+3 节点，不开新课；补齐本周未完成任务。</p></div>
+                <div><strong>周六</strong><span>周验收与整合</span><p>完成录音、限时作文或模考，用结果验证本周知识能否调用。</p></div>
+                <div><strong>周日</strong><span>轻复盘与休息</span><p>处理到期节点，整理错误日志，确定下一周唯一优先弱项。</p></div>
+              </div>
+            </section>
+          </section>
+
+          <section class="view" id="reviewView" data-view-panel="review" aria-labelledby="reviewHeading" hidden>
+            <div class="section-heading review-heading-row">
+              <div>
+                <p class="section-kicker">SPACED RECALL</p>
+                <h2 id="reviewHeading">把“看懂了”变成“记住了”</h2>
+              </div>
+              <p class="section-intro">
+                每个核心课程完成后，系统会按 T+20分钟、D+1、D+3、D+7、D+14、D+30 自动安排复习。
+              </p>
+            </div>
+
+            <div class="curve-panel" aria-label="复习节奏">
+              <div class="curve-copy">
+                <span>RECALL CURVE</span>
+                <strong>6 次主动提取</strong>
+                <p>每次都先关掉视频回忆，再打开原课核对薄弱点。</p>
+              </div>
+              <div class="curve-steps" aria-label="当天到三十天的复习节点">
+                <div class="curve-step is-origin"><span>D0</span><small>初学</small></div>
+                <div class="curve-step is-immediate"><span>+20m</span><small>即时</small></div>
+                <div class="curve-step"><span>D+1</span><small>速记</small></div>
+                <div class="curve-step"><span>D+3</span><small>复述</small></div>
+                <div class="curve-step"><span>D+7</span><small>小测</small></div>
+                <div class="curve-step"><span>D+14</span><small>迁移</small></div>
+                <div class="curve-step"><span>D+30</span><small>归档</small></div>
+              </div>
+            </div>
+
+            <div class="review-toolbar">
+              <div class="filter-group" role="group" aria-label="复习任务筛选">
+                <button class="filter-button is-active" type="button" data-review-filter="due">待处理</button>
+                <button class="filter-button" type="button" data-review-filter="upcoming">即将到来</button>
+                <button class="filter-button" type="button" data-review-filter="done">已完成</button>
+                <button class="filter-button" type="button" data-review-filter="all">全部</button>
+              </div>
+              <span id="reviewSummary">0 个节点</span>
+            </div>
+            <div class="review-list" id="reviewList"></div>
+          </section>
+
+          <section class="view" id="libraryView" data-view-panel="library" aria-labelledby="libraryHeading" hidden>
+            <div class="section-heading library-heading-row">
+              <div>
+                <p class="section-kicker">BILIBILI COURSE LIBRARY</p>
+                <h2 id="libraryHeading">10 条公开课直达链接</h2>
+              </div>
+              <p class="section-intro">
+                链接已于 2026-10-12 通过公开网页核验。B 站内容可能由发布者调整，页面保留 BV 号便于重新搜索。
+              </p>
+            </div>
+            <div class="library-filters" id="libraryFilters" role="group" aria-label="课程分类"></div>
+            <div class="course-grid" id="courseGrid"></div>
+          </section>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div>
+          <strong>雅思备考清单</strong>
+          <span>8 周公开课学习计划 · 浏览器本地保存</span>
+        </div>
+        <p>课程为学习路径参考；最终练习请以当季考试要求与官方样题为准。</p>
+        <button id="resetProgress" class="footer-reset" type="button">重置所有进度</button>
+      </footer>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>

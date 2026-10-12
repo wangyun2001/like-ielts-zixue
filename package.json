@@ -1,0 +1,19 @@
+{
+  "name": "like-ielts-zixue",
+  "version": "1.0.0",
+  "description": "雅思备考清单：8周B站公开课学习计划与艾宾浩斯复习队列",
+  "type": "module",
+  "private": false,
+  "homepage": "https://wangyun2001.github.io/like-ielts-zixue/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wangyun2001/like-ielts-zixue.git"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "check": "node --check app.js && node --check server.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
