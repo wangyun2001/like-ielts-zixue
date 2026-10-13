@@ -292,36 +292,48 @@ const TIP_SOURCES = {
     name: "Awesome Open IELTS",
     repo: "xingkongliang/awesome-ielts",
     url: "https://github.com/xingkongliang/awesome-ielts",
+    onlineUrl: "https://ielts.org/take-a-test/preparation-resources/sample-test-questions/academic-test",
+    onlineLabel: "官方在线样题",
     note: "整理官方样题、评分标准与四科训练建议，强调限时练习、主动输出和按标准复盘。",
   },
   edyou: {
     name: "IELTS Vocabulary Toolkit",
     repo: "edyou25/IELTS",
     url: "https://github.com/edyou25/IELTS",
+    onlineUrl: "https://ttsreader.com/player/",
+    onlineLabel: "在线听写工具",
     note: "用乱序、双向回忆、听写、造句和正确率统计训练词汇，适合拆成每天的小练习。",
   },
   practice: {
     name: "IELTS Practice Tracker",
     repo: "sallowayma-git/IELTS-practice",
     url: "https://github.com/sallowayma-git/IELTS-practice",
+    onlineUrl: "./practice.html?tip=four-box-error-log",
+    onlineLabel: "本站原创错题复盘",
     note: "记录正确率、用时、连续练习和错因，帮助把“做了很多题”变成“知道错在哪里”。",
   },
   monitor: {
     name: "IELTS Monitor",
     repo: "Touch-Sun/ielts-monitor",
     url: "https://github.com/Touch-Sun/ielts-monitor",
+    onlineUrl: "./practice.html?tip=ten-minute-focus",
+    onlineLabel: "本站十分钟测试",
     note: "以周为单位跟踪学习内容与结果，启发了“小目标、每周检查、下一周只改一个问题”的做法。",
   },
   simulator: {
     name: "IELTS Speaking Simulator",
     repo: "hubeiqiao/IELTS-Speaking-Simulator",
     url: "https://github.com/hubeiqiao/IELTS-Speaking-Simulator",
+    onlineUrl: "https://joespeaking.com/",
+    onlineLabel: "Joe Speaking 在线版",
     note: "通过随机题目、录音和练后整理模拟口语考试，重点是先开口，再根据录音做一次有目标的重录。",
   },
   prompt: {
     name: "IELTS Prompt",
     repo: "BaixuanLi/IELTS-Prompt",
     url: "https://github.com/BaixuanLi/IELTS-Prompt",
+    onlineUrl: "https://chatgpt.com/g/g-OtBE3SHAp-ielts-academic-writing-tutor",
+    onlineLabel: "写作反馈 GPT",
     note: "按雅思写作与口语的评分维度组织反馈，启发了“四个问题自查”和四色改稿方法。",
   },
 };
@@ -525,6 +537,18 @@ function task(id, week, day, subject, title, output, duration, course, part, rev
   return { id, week, day, subject, title, output, duration, course, part, reviewable };
 }
 
+function createProfileId() {
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const bytes = new Uint8Array(6);
+  if (globalThis.crypto?.getRandomValues) {
+    globalThis.crypto.getRandomValues(bytes);
+  } else {
+    for (let index = 0; index < bytes.length; index += 1) bytes[index] = Math.floor(Math.random() * 256);
+  }
+  const code = Array.from(bytes, (value) => alphabet[value % alphabet.length]).join("");
+  return `IELTS-${code}`;
+}
+
 function getDefaultState() {
   return {
     startDate: toISO(startOfToday()),
@@ -537,6 +561,16 @@ function getDefaultState() {
     libraryFilter: "all",
     triedTips: {},
     tipsFilter: "all",
+    profile: {
+      id: createProfileId(),
+      displayName: "",
+      testType: "academic",
+      targetScore: 6.5,
+      examDate: "",
+      weeklyHours: 12,
+    },
+    scoreRecords: [],
+    tipAttempts: [],
   };
 }
 
@@ -551,6 +585,12 @@ function loadState() {
       completedTaskTimes: saved.completedTaskTimes || {},
       completedReviews: saved.completedReviews || {},
       triedTips: saved.triedTips || {},
+      profile: {
+        ...getDefaultState().profile,
+        ...(saved.profile && typeof saved.profile === "object" ? saved.profile : {}),
+      },
+      scoreRecords: Array.isArray(saved.scoreRecords) ? saved.scoreRecords : [],
+      tipAttempts: Array.isArray(saved.tipAttempts) ? saved.tipAttempts : [],
     };
   } catch {
     return getDefaultState();
@@ -593,6 +633,31 @@ const els = {
   tipsProgress: document.querySelector(".tips-progress"),
   tipsProgressValue: document.querySelector("#tipsProgressValue"),
   pickRandomTip: document.querySelector("#pickRandomTip"),
+  profileForm: document.querySelector("#profileForm"),
+  profileName: document.querySelector("#profileName"),
+  profileTestType: document.querySelector("#profileTestType"),
+  profileTargetScore: document.querySelector("#profileTargetScore"),
+  profileExamDate: document.querySelector("#profileExamDate"),
+  profileWeeklyHours: document.querySelector("#profileWeeklyHours"),
+  profileDisplayName: document.querySelector("#profileDisplayName"),
+  profileIdDisplay: document.querySelector("#profileIdDisplay"),
+  profileTargetText: document.querySelector("#profileTargetText"),
+  latestOverall: document.querySelector("#latestOverall"),
+  bestOverall: document.querySelector("#bestOverall"),
+  profileAttemptCount: document.querySelector("#profileAttemptCount"),
+  scoreForm: document.querySelector("#scoreForm"),
+  scoreDate: document.querySelector("#scoreDate"),
+  scoreType: document.querySelector("#scoreType"),
+  scoreListening: document.querySelector("#scoreListening"),
+  scoreReading: document.querySelector("#scoreReading"),
+  scoreWriting: document.querySelector("#scoreWriting"),
+  scoreSpeaking: document.querySelector("#scoreSpeaking"),
+  scoreNote: document.querySelector("#scoreNote"),
+  scoreOverallPreview: document.querySelector("#scoreOverallPreview"),
+  scoreChart: document.querySelector("#scoreChart"),
+  scoreHistory: document.querySelector("#scoreHistory"),
+  exportProfile: document.querySelector("#exportProfile"),
+  importProfile: document.querySelector("#importProfile"),
   resetProgress: document.querySelector("#resetProgress"),
   toast: document.querySelector("#toast"),
 };
@@ -722,6 +787,15 @@ function showToast(message) {
   toastTimer = setTimeout(() => els.toast.classList.remove("is-visible"), 2600);
 }
 
+function escapeHTML(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 function renderProgress() {
   const completed = TASKS.filter((item) => state.completedTasks[item.id]).length;
   const percent = Math.round((completed / TASKS.length) * 100);
@@ -741,13 +815,15 @@ function renderProgress() {
 
 function renderHeaderStatus() {
   const week = getPlanWeek();
+  const learner = state.profile.displayName?.trim();
+  const prefix = learner ? `${learner} · ` : "";
   if (week === 0) {
     const days = daysBetween(startOfToday(), parseISO(state.startDate));
-    els.headerStatus.textContent = `${days} 天后开始`;
+    els.headerStatus.textContent = `${prefix}${days} 天后开始`;
   } else if (week === 9) {
-    els.headerStatus.textContent = "8周计划已结束";
+    els.headerStatus.textContent = `${prefix}8周计划已结束`;
   } else {
-    els.headerStatus.textContent = `第 ${week} 周进行中`;
+    els.headerStatus.textContent = `${prefix}第 ${week} 周进行中`;
   }
 }
 
@@ -1084,7 +1160,9 @@ function renderTips() {
   els.tipsGrid.innerHTML = tips.map((tip) => {
     const category = TIP_CATEGORIES[tip.category];
     const source = TIP_SOURCES[tip.source];
+    const test = TIP_TESTS[tip.id];
     const tried = Boolean(state.triedTips[tip.id]);
+    const attemptCount = state.tipAttempts.filter((attempt) => attempt.tipId === tip.id).length;
     const number = String(STUDY_TIPS.findIndex((entry) => entry.id === tip.id) + 1).padStart(2, "0");
     return `
       <article
@@ -1111,13 +1189,17 @@ function renderTips() {
           </ol>
         </div>
         <div class="tip-try">
-          <strong>现在试一下</strong>
-          <p>${tip.tryNow}</p>
+          <strong>现在试一下 · 配套测试题</strong>
+          <p>${test?.preview || tip.tryNow}</p>
+          <div class="tip-test-row">
+            <a href="./practice.html?tip=${encodeURIComponent(tip.id)}">开始这道题 <span aria-hidden="true">→</span></a>
+            <span>${attemptCount ? `已练 ${attemptCount} 次` : `${test?.minutes || tip.minutes} 分钟`}</span>
+          </div>
         </div>
         <p class="tip-done"><span aria-hidden="true">✓</span><strong>完成标准：</strong>${tip.doneWhen}</p>
         <div class="tip-card-footer">
-          <a href="${source.url}" target="_blank" rel="noopener noreferrer" aria-label="在 GitHub 查看来源 ${source.repo}">
-            GitHub 来源 <span aria-hidden="true">↗</span>
+          <a href="${test?.externalUrl || source.onlineUrl}" target="_blank" rel="noopener noreferrer" aria-label="打开与 ${tip.title} 对应的线上练习">
+            ${test?.externalLabel || source.onlineLabel} <span aria-hidden="true">↗</span>
           </a>
           <button
             class="tip-check${tried ? " is-active" : ""}"
@@ -1127,6 +1209,7 @@ function renderTips() {
             aria-label="${tried ? `取消已尝试：${tip.title}` : `标记已尝试：${tip.title}`}"
           >${tried ? "✓ 已尝试" : "标记已尝试"}</button>
         </div>
+        <p class="tip-source-note">方法整理参考：<a href="${source.url}" target="_blank" rel="noopener noreferrer">${source.repo}</a></p>
       </article>
     `;
   }).join("");
@@ -1138,7 +1221,10 @@ function renderTips() {
         <h4>${source.name}</h4>
         <code>${source.repo}</code>
         <p>${source.note}</p>
-        <a href="${source.url}" target="_blank" rel="noopener noreferrer">打开 GitHub 仓库 <span aria-hidden="true">↗</span></a>
+        <div class="source-actions">
+          <a href="${source.onlineUrl}" target="_blank" rel="noopener noreferrer">${source.onlineLabel} <span aria-hidden="true">↗</span></a>
+          <a href="${source.url}" target="_blank" rel="noopener noreferrer">查看方法仓库</a>
+        </div>
       </div>
     </article>
   `).join("");
@@ -1184,6 +1270,205 @@ function pickRandomTip() {
   showToast(`今天先试：${tip.title}`);
 }
 
+function calculateOverall(scores) {
+  const values = [scores.listening, scores.reading, scores.writing, scores.speaking].map(Number);
+  if (values.some((value) => !Number.isFinite(value) || value < 0 || value > 9)) return null;
+  return Math.round((values.reduce((sum, value) => sum + value, 0) / values.length) * 2) / 2;
+}
+
+function formatBand(value) {
+  return Number.isFinite(Number(value)) ? Number(value).toFixed(1) : "—";
+}
+
+function getSortedScoreRecords() {
+  return [...state.scoreRecords].sort((a, b) => {
+    const dateDelta = String(b.date).localeCompare(String(a.date));
+    return dateDelta || String(b.createdAt || "").localeCompare(String(a.createdAt || ""));
+  });
+}
+
+function renderProfile() {
+  const profile = state.profile;
+  const records = getSortedScoreRecords();
+  const latest = records[0];
+  const best = records.length ? Math.max(...records.map((record) => Number(record.overall) || 0)) : null;
+
+  els.profileName.value = profile.displayName || "";
+  els.profileTestType.value = profile.testType || "academic";
+  els.profileTargetScore.value = profile.targetScore ?? 6.5;
+  els.profileExamDate.value = profile.examDate || "";
+  els.profileWeeklyHours.value = profile.weeklyHours ?? 12;
+  els.profileDisplayName.textContent = profile.displayName?.trim() || "本地学习者";
+  els.profileIdDisplay.textContent = profile.id;
+  els.latestOverall.textContent = latest ? formatBand(latest.overall) : "—";
+  els.bestOverall.textContent = best === null ? "—" : formatBand(best);
+  els.profileAttemptCount.textContent = state.tipAttempts.length;
+
+  if (profile.examDate) {
+    const daysLeft = daysBetween(startOfToday(), parseISO(profile.examDate));
+    const countdown = daysLeft >= 0 ? `距考试 ${daysLeft} 天` : `考试日期已过 ${Math.abs(daysLeft)} 天`;
+    els.profileTargetText.textContent = `目标 ${formatBand(profile.targetScore)} · ${countdown} · 每周 ${profile.weeklyHours} 小时`;
+  } else {
+    els.profileTargetText.textContent = `目标 ${formatBand(profile.targetScore)} · 尚未设置考试日期 · 每周 ${profile.weeklyHours} 小时`;
+  }
+
+  if (!els.scoreDate.value) els.scoreDate.value = toISO(startOfToday());
+  updateScorePreview();
+  renderScoreChart(records);
+  renderScoreHistory(records);
+}
+
+function renderScoreChart(records) {
+  const chartRecords = records.slice(0, 8).reverse();
+  if (!chartRecords.length) {
+    els.scoreChart.innerHTML = '<div class="score-empty">保存第一条成绩后，这里会出现总分走势。</div>';
+    return;
+  }
+
+  els.scoreChart.innerHTML = chartRecords.map((record) => {
+    const height = Math.max(8, (Number(record.overall) / 9) * 100);
+    const shortDate = String(record.date).slice(5).replace("-", "/");
+    return `
+      <div class="score-bar-item" title="${escapeHTML(record.date)} · 总分 ${formatBand(record.overall)}">
+        <strong>${formatBand(record.overall)}</strong>
+        <div><span style="height: ${height}%"></span></div>
+        <small>${shortDate}</small>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderScoreHistory(records) {
+  const typeLabels = { mock: "完整模考", weekly: "周测", official: "正式考试" };
+  if (!records.length) {
+    els.scoreHistory.innerHTML = '<div class="score-empty">还没有雅思成绩记录。可以先录入一次基线模考。</div>';
+    return;
+  }
+
+  els.scoreHistory.innerHTML = records.map((record) => `
+    <article class="score-record">
+      <div class="score-record-date"><strong>${escapeHTML(String(record.date).slice(5))}</strong><span>${typeLabels[record.type] || "练习"}</span></div>
+      <div class="score-record-main">
+        <div class="score-record-total"><span>OVERALL</span><strong>${formatBand(record.overall)}</strong></div>
+        <div class="score-record-skills">
+          <span>L ${formatBand(record.listening)}</span>
+          <span>R ${formatBand(record.reading)}</span>
+          <span>W ${formatBand(record.writing)}</span>
+          <span>S ${formatBand(record.speaking)}</span>
+        </div>
+        ${record.note ? `<p>${escapeHTML(record.note)}</p>` : ""}
+      </div>
+      <button class="score-delete" type="button" data-score-delete="${escapeHTML(record.id)}" aria-label="删除 ${escapeHTML(record.date)} 的成绩记录">删除</button>
+    </article>
+  `).join("");
+}
+
+function getScoreFormValues() {
+  return {
+    listening: Number(els.scoreListening.value),
+    reading: Number(els.scoreReading.value),
+    writing: Number(els.scoreWriting.value),
+    speaking: Number(els.scoreSpeaking.value),
+  };
+}
+
+function updateScorePreview() {
+  const hasAllValues = [els.scoreListening, els.scoreReading, els.scoreWriting, els.scoreSpeaking]
+    .every((input) => input.value !== "");
+  const overall = hasAllValues ? calculateOverall(getScoreFormValues()) : null;
+  els.scoreOverallPreview.textContent = overall === null ? "—" : formatBand(overall);
+}
+
+function saveProfileInfo(event) {
+  event.preventDefault();
+  state.profile = {
+    ...state.profile,
+    displayName: els.profileName.value.trim(),
+    testType: els.profileTestType.value,
+    targetScore: Number(els.profileTargetScore.value) || 6.5,
+    examDate: els.profileExamDate.value,
+    weeklyHours: Number(els.profileWeeklyHours.value) || 12,
+  };
+  saveState();
+  renderHeaderStatus();
+  renderProfile();
+  showToast("账号信息已保存到当前浏览器。");
+}
+
+function saveScoreRecord(event) {
+  event.preventDefault();
+  const scores = getScoreFormValues();
+  const overall = calculateOverall(scores);
+  if (overall === null) {
+    showToast("请确认四科成绩都在 0–9 分之间。");
+    return;
+  }
+
+  state.scoreRecords.push({
+    id: `score-${Date.now()}`,
+    date: els.scoreDate.value,
+    type: els.scoreType.value,
+    ...scores,
+    overall,
+    note: els.scoreNote.value.trim(),
+    createdAt: new Date().toISOString(),
+  });
+  saveState();
+  els.scoreForm.reset();
+  els.scoreDate.value = toISO(startOfToday());
+  els.scoreType.value = "mock";
+  renderProfile();
+  showToast(`成绩已保存，本次总分 ${formatBand(overall)}。`);
+}
+
+function removeScoreRecord(id) {
+  const record = state.scoreRecords.find((item) => item.id === id);
+  if (!record || !window.confirm(`删除 ${record.date} 的成绩记录？`)) return;
+  state.scoreRecords = state.scoreRecords.filter((item) => item.id !== id);
+  saveState();
+  renderProfile();
+  showToast("成绩记录已删除。");
+}
+
+function exportLearningProfile() {
+  const payload = {
+    app: "like-ielts-zixue",
+    version: 2,
+    exportedAt: new Date().toISOString(),
+    state,
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `雅思学习档案-${state.profile.id}-${toISO(startOfToday())}.json`;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+  showToast("学习档案已导出，可在另一台电脑导入。");
+}
+
+async function importLearningProfile(event) {
+  const [file] = event.target.files;
+  if (!file) return;
+  try {
+    const payload = JSON.parse(await file.text());
+    const imported = payload?.app === "like-ielts-zixue" ? payload.state : payload;
+    if (!imported || typeof imported !== "object" || !imported.profile) throw new Error("invalid-profile");
+    if (!window.confirm(`导入档案 ${imported.profile.id || "未知编号"}？当前浏览器中的记录将被替换。`)) return;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(imported));
+    state = loadState();
+    saveState();
+    renderAll(false);
+    showToast("学习档案导入成功。");
+  } catch {
+    showToast("导入失败：请选择由本项目导出的 JSON 学习档案。");
+  } finally {
+    els.importProfile.value = "";
+  }
+}
+
 function switchView(view, shouldScroll = true) {
   state.view = view;
   saveState();
@@ -1200,6 +1485,7 @@ function switchView(view, shouldScroll = true) {
   if (view === "review") renderReviews();
   if (view === "library") renderLibrary();
   if (view === "tips") renderTips();
+  if (view === "profile") renderProfile();
   if (shouldScroll) document.querySelector(".content-stage").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -1245,6 +1531,7 @@ function renderAll(shouldScroll = false) {
   renderReviews();
   renderLibrary();
   renderTips();
+  renderProfile();
   switchView(state.view, shouldScroll);
 }
 
@@ -1309,6 +1596,12 @@ document.addEventListener("click", (event) => {
   const tipButton = event.target.closest("[data-tip-id]");
   if (tipButton) {
     toggleTip(tipButton.dataset.tipId);
+    return;
+  }
+
+  const scoreDelete = event.target.closest("[data-score-delete]");
+  if (scoreDelete) {
+    removeScoreRecord(scoreDelete.dataset.scoreDelete);
   }
 });
 
@@ -1320,6 +1613,12 @@ document.querySelector(".brand").addEventListener("click", (event) => {
 
 document.querySelector("#jumpToday").addEventListener("click", () => switchView("today"));
 els.pickRandomTip.addEventListener("click", pickRandomTip);
+els.profileForm.addEventListener("submit", saveProfileInfo);
+els.scoreForm.addEventListener("submit", saveScoreRecord);
+[els.scoreListening, els.scoreReading, els.scoreWriting, els.scoreSpeaking]
+  .forEach((input) => input.addEventListener("input", updateScorePreview));
+els.exportProfile.addEventListener("click", exportLearningProfile);
+els.importProfile.addEventListener("change", importLearningProfile);
 
 els.startDate.addEventListener("change", () => {
   if (!els.startDate.value) return;
@@ -1350,9 +1649,10 @@ els.resetProgress.addEventListener("click", () => {
   els.resetProgress.textContent = "重置所有进度";
   saveState();
   renderAll(false);
-  showToast("所有打卡和日期设置已重置。");
+  showToast("账号信息、成绩、测试题与全部打卡记录已重置。");
 });
 
+saveState();
 renderAll(false);
 
 setInterval(() => {

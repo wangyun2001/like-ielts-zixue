@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="雅思备考清单：八周 B 站公开课学习计划，含周目标、打卡、课程直达、艾宾浩斯复习队列与 GitHub 学习小技巧。"
+      content="雅思备考清单：八周 B 站公开课计划、艾宾浩斯复习、12 道学习技巧测试与个人雅思成绩档案。"
     />
     <meta name="theme-color" content="#f2efe7" />
     <title>雅思备考清单｜8周公开课学习计划</title>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css?v=5" />
-    <script src="./app.js?v=4" defer></script>
+    <link rel="stylesheet" href="./styles.css?v=6" />
+    <script src="./practice-data.js?v=1" defer></script>
+    <script src="./app.js?v=5" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#mainContent">跳到主要内容</a>
@@ -44,6 +45,9 @@
           </button>
           <button class="nav-button" type="button" data-view="tips">
             学习小技巧
+          </button>
+          <button class="nav-button" type="button" data-view="profile">
+            个人记录
           </button>
         </nav>
 
@@ -376,7 +380,7 @@
                 <h2 id="tipsHeading">一次只试一个小技巧</h2>
               </div>
               <p class="section-intro">
-                从公开 GitHub 雅思项目中整理出 12 个实用方法，再拆成“看懂—照做—检查”三步。每次选一张卡，做完再标记。
+                从公开 GitHub 雅思项目中整理出 12 个实用方法。每张卡都配有一道原创测试题和独立网址，可立即套用并保存练习记录。
               </p>
             </div>
 
@@ -417,9 +421,136 @@
                   <span>OPEN-SOURCE TRAIL</span>
                   <h3 id="tipsSourcesHeading">方法从哪里来</h3>
                 </div>
-                <p>下面列出整理时参考的公开 GitHub 项目。卡片内容均为重新归纳的学习步骤，可点击仓库继续查看原项目。</p>
+                <p>下面保留方法来源，并优先提供已核验的线上练习入口。没有公开演示页的仓库已接入本站原创测试题，仍可查看原仓库说明。</p>
               </div>
               <div class="source-grid" id="tipsSources"></div>
+            </section>
+          </section>
+
+          <section class="view" id="profileView" data-view-panel="profile" aria-labelledby="profileHeading" hidden>
+            <div class="section-heading profile-heading-row">
+              <div>
+                <p class="section-kicker">MY IELTS RECORD</p>
+                <h2 id="profileHeading">统一学习档案与成绩记录</h2>
+              </div>
+              <p class="section-intro">
+                用一个档案保存目标、考试日期、四科成绩和小技巧测试记录。数据保存在当前浏览器，可导出后带到其他电脑。
+              </p>
+            </div>
+
+            <div class="profile-overview">
+              <article class="profile-identity-card">
+                <span>STUDY PROFILE</span>
+                <h3 id="profileDisplayName">本地学习者</h3>
+                <code id="profileIdDisplay">IELTS-LOCAL</code>
+                <p id="profileTargetText">设置目标分数与考试日期，系统会在这里显示倒计时。</p>
+                <div class="profile-metrics">
+                  <div><strong id="latestOverall">—</strong><span>最近总分</span></div>
+                  <div><strong id="bestOverall">—</strong><span>最高总分</span></div>
+                  <div><strong id="profileAttemptCount">0</strong><span>小测试</span></div>
+                </div>
+              </article>
+
+              <form class="profile-form" id="profileForm">
+                <div class="profile-form-heading">
+                  <div>
+                    <span>ACCOUNT SETTINGS</span>
+                    <h3>账号信息</h3>
+                  </div>
+                  <small>保存在浏览器本地</small>
+                </div>
+                <div class="profile-form-grid">
+                  <label>
+                    <span>姓名或昵称</span>
+                    <input id="profileName" name="profileName" type="text" maxlength="30" placeholder="例如：小林" autocomplete="nickname" />
+                  </label>
+                  <label>
+                    <span>考试类型</span>
+                    <select id="profileTestType" name="profileTestType">
+                      <option value="academic">Academic 学术类</option>
+                      <option value="general">General Training 培训类</option>
+                    </select>
+                  </label>
+                  <label>
+                    <span>目标总分</span>
+                    <input id="profileTargetScore" name="profileTargetScore" type="number" min="4" max="9" step="0.5" value="6.5" />
+                  </label>
+                  <label>
+                    <span>预计考试日期</span>
+                    <input id="profileExamDate" name="profileExamDate" type="date" />
+                  </label>
+                  <label>
+                    <span>每周学习时长</span>
+                    <input id="profileWeeklyHours" name="profileWeeklyHours" type="number" min="1" max="40" step="1" value="12" />
+                  </label>
+                </div>
+                <button class="button button-dark" type="submit">保存账号信息</button>
+              </form>
+            </div>
+
+            <section class="score-section" aria-labelledby="scoreHeading">
+              <div class="subsection-heading">
+                <div>
+                  <span>SCORE TRACKER</span>
+                  <h3 id="scoreHeading">记录一次四科成绩</h3>
+                </div>
+                <p>可以记录模考、周测或正式考试。总分由四科平均值自动计算到最近的 0.5 分。</p>
+              </div>
+
+              <div class="score-layout">
+                <form class="score-form" id="scoreForm">
+                  <div class="score-meta-grid">
+                    <label>
+                      <span>日期</span>
+                      <input id="scoreDate" type="date" required />
+                    </label>
+                    <label>
+                      <span>记录类型</span>
+                      <select id="scoreType">
+                        <option value="mock">完整模考</option>
+                        <option value="weekly">周测</option>
+                        <option value="official">正式考试</option>
+                      </select>
+                    </label>
+                  </div>
+                  <div class="skill-score-grid">
+                    <label data-score-subject="listening"><span>听力</span><input id="scoreListening" type="number" min="0" max="9" step="0.5" required /></label>
+                    <label data-score-subject="reading"><span>阅读</span><input id="scoreReading" type="number" min="0" max="9" step="0.5" required /></label>
+                    <label data-score-subject="writing"><span>写作</span><input id="scoreWriting" type="number" min="0" max="9" step="0.5" required /></label>
+                    <label data-score-subject="speaking"><span>口语</span><input id="scoreSpeaking" type="number" min="0" max="9" step="0.5" required /></label>
+                  </div>
+                  <label class="score-note-field">
+                    <span>本次备注</span>
+                    <textarea id="scoreNote" rows="3" maxlength="240" placeholder="例如：阅读判断题失分最多；下周只练原文证据。"></textarea>
+                  </label>
+                  <div class="score-submit-row">
+                    <div class="overall-preview"><span>预计总分</span><strong id="scoreOverallPreview">—</strong></div>
+                    <button class="button button-orange" type="submit">保存本次成绩</button>
+                  </div>
+                </form>
+
+                <div class="score-insights">
+                  <div class="score-insights-heading">
+                    <div><span>PROGRESS</span><h3>总分走势</h3></div>
+                    <small>最近 8 次</small>
+                  </div>
+                  <div class="score-chart" id="scoreChart" aria-label="最近成绩趋势"></div>
+                  <div class="score-history" id="scoreHistory"></div>
+                </div>
+              </div>
+            </section>
+
+            <section class="data-portability" aria-labelledby="dataPortabilityHeading">
+              <div>
+                <span>MOVE BETWEEN DEVICES</span>
+                <h3 id="dataPortabilityHeading">把同一个学习档案带到其他电脑</h3>
+                <p>导出文件包含账号设置、课程打卡、复习记录、成绩和小技巧测试记录。导入会用备份内容替换当前浏览器中的档案。</p>
+              </div>
+              <div class="data-actions">
+                <button class="button button-light" id="exportProfile" type="button">导出学习档案</button>
+                <label class="button button-dark import-button" for="importProfile">导入学习档案</label>
+                <input id="importProfile" type="file" accept="application/json,.json" hidden />
+              </div>
             </section>
           </section>
         </section>
@@ -428,7 +559,7 @@
       <footer class="site-footer">
         <div>
           <strong>雅思备考清单</strong>
-          <span>8 周公开课计划 · 艾宾浩斯复习 · 学习小技巧</span>
+          <span>8 周公开课计划 · 艾宾浩斯复习 · 小技巧测试 · 个人成绩</span>
         </div>
         <p>课程为学习路径参考；最终练习请以当季考试要求与官方样题为准。</p>
         <button id="resetProgress" class="footer-reset" type="button">重置所有进度</button>

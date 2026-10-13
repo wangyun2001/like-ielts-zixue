@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="雅思备考清单配套小技巧测试题：直接作答、查看检查要点并保存练习记录。" />
+    <meta name="theme-color" content="#f2efe7" />
+    <title>学习小技巧测试｜雅思备考清单</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css?v=6" />
+    <link rel="stylesheet" href="./practice.css?v=1" />
+    <script src="./practice-data.js?v=1" defer></script>
+    <script src="./practice.js?v=1" defer></script>
+  </head>
+  <body class="practice-body">
+    <a class="skip-link" href="#practiceMain">跳到测试题</a>
+
+    <div class="practice-page">
+      <header class="practice-header">
+        <a class="brand" href="./index.html" aria-label="返回雅思备考清单">
+          <span class="brand-mark" aria-hidden="true">8W</span>
+          <span class="brand-copy">
+            <strong>雅思备考清单</strong>
+            <small>TIP PRACTICE LAB</small>
+          </span>
+        </a>
+        <div class="practice-account" aria-label="当前学习档案">
+          <span>当前档案</span>
+          <strong id="practiceProfileName">本地学习者</strong>
+          <code id="practiceProfileId">IELTS-LOCAL</code>
+        </div>
+        <a class="button button-dark button-compact" href="./index.html">返回主计划</a>
+      </header>
+
+      <main id="practiceMain">
+        <section class="practice-banner" aria-labelledby="practicePageHeading">
+          <div>
+            <p class="section-kicker">DIRECT-LINK PRACTICE</p>
+            <h1 id="practicePageHeading">把方法马上用在一道题上</h1>
+          </div>
+          <p>每道题都有独立网址。作答记录与主项目使用同一个本地学习档案，完成后会自动标记对应小技巧。</p>
+        </section>
+
+        <div class="practice-layout">
+          <aside class="practice-sidebar" aria-labelledby="testListHeading">
+            <div class="practice-sidebar-heading">
+              <span>12 MINI TESTS</span>
+              <h2 id="testListHeading">选择测试题</h2>
+            </div>
+            <nav id="testList" class="test-list" aria-label="小技巧测试题列表"></nav>
+          </aside>
+
+          <article class="practice-card" id="practiceCard">
+            <div class="practice-card-top">
+              <div>
+                <span class="practice-eyebrow" id="practiceEyebrow">PRACTICE</span>
+                <h2 id="practiceTitle">正在载入测试题</h2>
+                <p id="practiceIntro"></p>
+              </div>
+              <div class="practice-time"><strong id="practiceMinutes">10</strong><span>分钟</span></div>
+            </div>
+
+            <div class="practice-source-actions">
+              <a id="externalPracticeLink" href="#" target="_blank" rel="noopener noreferrer" hidden>
+                打开对应线上项目 <span aria-hidden="true">↗</span>
+              </a>
+              <button id="copyPracticeLink" class="plain-action" type="button">复制本题网址</button>
+            </div>
+
+            <section class="practice-material" aria-labelledby="materialHeading">
+              <span id="materialHeading">题目材料</span>
+              <p id="practiceMaterial"></p>
+              <button id="playAudio" class="audio-button" type="button" hidden>
+                <span aria-hidden="true">▶</span> 只播放一次
+              </button>
+            </section>
+
+            <form id="practiceForm" class="practice-form">
+              <fieldset>
+                <legend>测试题</legend>
+                <p class="practice-question" id="practiceQuestion"></p>
+                <div id="choiceAnswers" class="choice-answers"></div>
+                <label class="answer-field" id="textAnswerWrap" for="practiceAnswer">
+                  <span>你的答案或练后记录</span>
+                  <textarea id="practiceAnswer" rows="7" placeholder="在这里作答"></textarea>
+                </label>
+              </fieldset>
+
+              <div class="speaking-timer" id="speakingTimer" hidden>
+                <div><span>口语计时</span><strong id="timerValue">60</strong><small>秒</small></div>
+                <button id="timerButton" class="button button-orange" type="button">开始计时</button>
+              </div>
+
+              <label class="confidence-field" for="confidenceRating">
+                <span>完成后的感觉</span>
+                <select id="confidenceRating">
+                  <option value="1">还不会，需要再看步骤</option>
+                  <option value="2" selected>基本完成，还有一点卡</option>
+                  <option value="3">能独立完成</option>
+                </select>
+              </label>
+
+              <div class="practice-submit-row">
+                <button class="button button-dark" type="submit">保存本次练习</button>
+                <button class="button button-light" id="showReference" type="button">查看检查要点</button>
+              </div>
+            </form>
+
+            <section class="reference-panel" id="referencePanel" aria-labelledby="referenceHeading" hidden>
+              <span>SELF-CHECK</span>
+              <h3 id="referenceHeading">检查要点</h3>
+              <ul id="referenceList"></ul>
+            </section>
+
+            <section class="attempt-panel" aria-labelledby="attemptHeading">
+              <div class="attempt-heading-row">
+                <div>
+                  <span>YOUR ATTEMPTS</span>
+                  <h3 id="attemptHeading">这道题的练习记录</h3>
+                </div>
+                <strong id="attemptCount">0 次</strong>
+              </div>
+              <div id="attemptList" class="attempt-list"></div>
+            </section>
+          </article>
+        </div>
+      </main>
+
+      <footer class="practice-footer">
+        <span>所有测试题均为本项目原创练习，不含第三方真题或受版权保护的题库。</span>
+        <a href="./index.html">回到雅思备考清单 →</a>
+      </footer>
+    </div>
+
+    <div class="toast" id="practiceToast" role="status" aria-live="polite"></div>
+  </body>
+</html>
