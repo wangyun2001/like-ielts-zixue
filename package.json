@@ -1,7 +1,7 @@
 {
   "name": "like-ielts-zixue",
-  "version": "1.0.0",
-  "description": "雅思备考清单：8周B站公开课学习计划与艾宾浩斯复习队列",
+  "version": "1.1.0",
+  "description": "雅思备考清单：8周B站公开课计划、艾宾浩斯复习与GitHub学习小技巧",
   "type": "module",
   "private": false,
   "homepage": "https://wangyun2001.github.io/like-ielts-zixue/",

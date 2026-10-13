@@ -277,6 +277,250 @@ const REVIEW_STAGES = [
   { days: 30, code: "D+30", name: "归档", minutes: 25, method: "再测一次；掌握则归档，仍错则加入弱项清单。" },
 ];
 
+const TIP_CATEGORIES = {
+  starter: { label: "入门", en: "START", color: "#f05432" },
+  listening: { label: "听力", en: "LISTEN", color: "#2251e6" },
+  reading: { label: "阅读", en: "READ", color: "#008c83" },
+  speaking: { label: "口语", en: "SPEAK", color: "#e34b2c" },
+  writing: { label: "写作", en: "WRITE", color: "#7d43c2" },
+  vocabulary: { label: "词汇", en: "VOCAB", color: "#719d12" },
+  review: { label: "复盘", en: "REVIEW", color: "#272a24" },
+};
+
+const TIP_SOURCES = {
+  awesome: {
+    name: "Awesome Open IELTS",
+    repo: "xingkongliang/awesome-ielts",
+    url: "https://github.com/xingkongliang/awesome-ielts",
+    note: "整理官方样题、评分标准与四科训练建议，强调限时练习、主动输出和按标准复盘。",
+  },
+  edyou: {
+    name: "IELTS Vocabulary Toolkit",
+    repo: "edyou25/IELTS",
+    url: "https://github.com/edyou25/IELTS",
+    note: "用乱序、双向回忆、听写、造句和正确率统计训练词汇，适合拆成每天的小练习。",
+  },
+  practice: {
+    name: "IELTS Practice Tracker",
+    repo: "sallowayma-git/IELTS-practice",
+    url: "https://github.com/sallowayma-git/IELTS-practice",
+    note: "记录正确率、用时、连续练习和错因，帮助把“做了很多题”变成“知道错在哪里”。",
+  },
+  monitor: {
+    name: "IELTS Monitor",
+    repo: "Touch-Sun/ielts-monitor",
+    url: "https://github.com/Touch-Sun/ielts-monitor",
+    note: "以周为单位跟踪学习内容与结果，启发了“小目标、每周检查、下一周只改一个问题”的做法。",
+  },
+  simulator: {
+    name: "IELTS Speaking Simulator",
+    repo: "hubeiqiao/IELTS-Speaking-Simulator",
+    url: "https://github.com/hubeiqiao/IELTS-Speaking-Simulator",
+    note: "通过随机题目、录音和练后整理模拟口语考试，重点是先开口，再根据录音做一次有目标的重录。",
+  },
+  prompt: {
+    name: "IELTS Prompt",
+    repo: "BaixuanLi/IELTS-Prompt",
+    url: "https://github.com/BaixuanLi/IELTS-Prompt",
+    note: "按雅思写作与口语的评分维度组织反馈，启发了“四个问题自查”和四色改稿方法。",
+  },
+};
+
+const STUDY_TIPS = [
+  {
+    id: "ten-minute-focus",
+    category: "starter",
+    title: "十分钟，只练一件事",
+    summary: "时间少也能开始：把“学雅思”缩小成一个能数出来的动作。",
+    minutes: 10,
+    why: "“提高英语”太大，很容易拖延；一个小目标更容易完成，也更容易看见进步。",
+    steps: [
+      "写下一个小目标，例如“找出 3 个定位词”或“说满 60 秒”。",
+      "计时 6 分钟，只做这一件事，中途不换题、不看手机。",
+      "最后 4 分钟闭卷说出做法，再记下唯一一个卡点。",
+    ],
+    tryNow: "从今天的任务里挑一道题，把目标改写成“我要完成 ___ 个 ___”。",
+    doneWhen: "计时结束时，你有一个看得见的结果和一条卡点记录。",
+    source: "monitor",
+  },
+  {
+    id: "four-score-questions",
+    category: "writing",
+    title: "评分标准变成四个问题",
+    summary: "不用背复杂术语，写完后用四句人话检查文章。",
+    minutes: 12,
+    why: "知道考官看什么，修改时才不会只盯拼写，也不会漫无目的地重写整篇。",
+    steps: [
+      "内容：我有没有完整回答题目？",
+      "顺序：读者能不能顺着我的段落看懂？",
+      "语言：词够准确吗？句子有明显错误吗？",
+    ],
+    tryNow: "拿一段旧作文，在段尾分别写下“内容、顺序、词、句”四项各一个问题。",
+    doneWhen: "你能圈出最需要先改的一项，并说清楚原因。",
+    source: "prompt",
+  },
+  {
+    id: "one-play-three-causes",
+    category: "listening",
+    title: "听力只听一遍，再分三种错",
+    summary: "第一遍像考试，复盘时再判断自己究竟卡在哪一步。",
+    minutes: 15,
+    why: "“没听懂”常常混着不同问题；分清听音、理解和拼写，下一次才知道练什么。",
+    steps: [
+      "第一次完整播放，不暂停、不倒带，直接完成 5 道题。",
+      "对答案后，只重听错题附近的一小段，找到正确答案出现的位置。",
+      "给错题贴标签：没听见、听见没懂、会写但拼错。",
+    ],
+    tryNow: "找 5 道听力填空题，给每个错题画上耳朵、问号或铅笔符号。",
+    doneWhen: "每道错题都有一个错因标签，并写下下一次的练法。",
+    source: "awesome",
+  },
+  {
+    id: "shadow-three-times",
+    category: "listening",
+    title: "一句话影子跟读三遍",
+    summary: "跟在音频后面模仿，让耳朵、嘴巴和节奏一起工作。",
+    minutes: 8,
+    why: "短句反复模仿能帮助你听清连读和重音，也会让口语更顺。",
+    steps: [
+      "选一句 5–12 秒的音频，先看文本听一遍，划出重读词。",
+      "第二遍慢半拍跟读，尽量复制停顿、连读和语气。",
+      "关掉文本再跟一遍，最后独立说出整句。",
+    ],
+    tryNow: "从今天的听力材料中截一句，录下第三遍，再与原音比较一个不同点。",
+    doneWhen: "你能不看文字说完整，并指出一个发音或节奏变化。",
+    source: "awesome",
+  },
+  {
+    id: "reading-twenty-minute-locate",
+    category: "reading",
+    title: "阅读 20 分钟定位法",
+    summary: "先找题目关键词，再回文章找同义表达和证据句。",
+    minutes: 20,
+    why: "阅读不是从头逐字翻译；先定位能把时间留给真正需要判断的句子。",
+    steps: [
+      "用 2 分钟看标题和题目，圈出人名、数字、地点和核心名词。",
+      "用 13 分钟扫段落，找关键词的同义说法，并在证据句旁写题号。",
+      "用 5 分钟检查：每个答案能不能指回一条原文证据。",
+    ],
+    tryNow: "拿一篇短阅读，只做 5 题；禁止全文翻译，每题必须划一条证据句。",
+    doneWhen: "5 个答案旁都有题号、定位词和对应证据。",
+    source: "awesome",
+  },
+  {
+    id: "true-false-not-given-evidence",
+    category: "reading",
+    title: "判断题只相信原文",
+    summary: "True 看一致，False 看相反，Not Given 看原文没有说。",
+    minutes: 12,
+    why: "最常见的错误是用常识补答案；判断题只考文章有没有提供证据。",
+    steps: [
+      "把题目主语、动作和范围词圈出来，例如 all、some、only。",
+      "在原文找到同一件事，比较意思是相同、相反，还是没有完整信息。",
+      "在答案旁写 T、F 或 NG，再抄下不超过 8 个词的证据。",
+    ],
+    tryNow: "做 3 道判断题，并对每题问自己：“原文哪几个词能证明？”",
+    doneWhen: "你能用原文解释答案，而不是说“我觉得应该是”。",
+    source: "awesome",
+  },
+  {
+    id: "two-way-vocabulary",
+    category: "vocabulary",
+    title: "单词要双向回忆",
+    summary: "既要看到英文懂意思，也要看到中文能想起英文。",
+    minutes: 10,
+    why: "只会认词，写作和口语时仍然想不起来；反向回忆能训练主动使用。",
+    steps: [
+      "准备 8 张小卡：正面写英文，背面写中文和一个短例句。",
+      "先看英文说中文，再打乱顺序，看中文拼出英文。",
+      "把答错的卡单独放一堆，5 分钟后只测这一堆。",
+    ],
+    tryNow: "从今天的新词中选 8 个，做一轮英→中和一轮中→英。",
+    doneWhen: "两轮都答对至少 6 个；错词已进入待复习小堆。",
+    source: "edyou",
+  },
+  {
+    id: "personal-sentence",
+    category: "vocabulary",
+    title: "把新词放进自己的句子",
+    summary: "用学校、家庭或兴趣造句，比抄词典例句更容易记。",
+    minutes: 12,
+    why: "自己想过的内容会和生活经验连起来，复习时更容易把词叫出来。",
+    steps: [
+      "选 5 个今天的新词，先确认词性和常见搭配。",
+      "每个词写一句和自己有关的话，句子控制在 8–15 个词。",
+      "遮住单词，只看中文提示，把 5 句大声复述一遍。",
+    ],
+    tryNow: "用“我的学校”做主题，把 5 个新词写进 5 句真实的话。",
+    doneWhen: "5 句话意思清楚，隔 10 分钟还能想起至少 4 个词。",
+    source: "edyou",
+  },
+  {
+    id: "speak-three-second-record",
+    category: "speaking",
+    title: "3 秒开口，录满 60 秒",
+    summary: "先真实回答一遍，再根据录音只改一个问题。",
+    minutes: 10,
+    why: "一直准备稿子会掩盖真实卡点；录音能让你听见停顿、重复和没说清的地方。",
+    steps: [
+      "随机选一道 Part 1 或简单话题，看到题后 3 秒内开口。",
+      "录 60 秒，不暂停；听回放并标记一处停顿、一处重复或一处缺少细节。",
+      "只针对最明显的一处改进，完整重录一次。",
+    ],
+    tryNow: "回答“What do you like about your school?”，第一遍不写稿。",
+    doneWhen: "第二遍比第一遍更清楚，并且你能说出改了哪一点。",
+    source: "simulator",
+  },
+  {
+    id: "idea-reason-example",
+    category: "speaking",
+    title: "观点—理由—例子三格",
+    summary: "不知道怎么展开时，用三个格子把一句话说完整。",
+    minutes: 8,
+    why: "只回答 yes 或 no 内容太薄；加一个理由和一个小例子，就有清楚的展开。",
+    steps: [
+      "第一格写观点：我认为……",
+      "第二格写理由：因为……",
+      "第三格写一个真实或合理的小例子：比如……",
+    ],
+    tryNow: "回答“学生应该每天运动吗？”，每个格子只写关键词，再连起来说 45 秒。",
+    doneWhen: "听的人能分清你的观点、原因和例子。",
+    source: "awesome",
+  },
+  {
+    id: "four-color-writing-check",
+    category: "writing",
+    title: "四色写作自查",
+    summary: "四种颜色各查一件事，最后只重写最差的一句。",
+    minutes: 15,
+    why: "一次改所有问题容易乱；分颜色检查，能看出文章最弱的是内容、结构、用词还是语法。",
+    steps: [
+      "橙色圈是否回答题目；蓝色画段落连接；绿色标关键词重复；紫色标句子错误。",
+      "数一数哪种颜色最多，把它定为今天唯一的修改重点。",
+      "从这一类中挑最差的一句重写，并在旁边写“为什么这样改”。",
+    ],
+    tryNow: "拿一段 80–120 词的旧作文，用四种符号代替彩笔也可以。",
+    doneWhen: "你找到最弱的一项，并留下原句、改句和修改理由。",
+    source: "prompt",
+  },
+  {
+    id: "four-box-error-log",
+    category: "review",
+    title: "错题四格 + 周日小结",
+    summary: "每个错题只记四格，周末找出出现最多的错因。",
+    minutes: 15,
+    why: "错题本不是抄答案；记录错因和下次动作，才会减少同一种错误。",
+    steps: [
+      "四格依次写：题目、我的错因、原文或规则证据、下次提醒。",
+      "周日给本周错题按错因分类，数出出现次数最多的一类。",
+      "下周只设一个改进目标，例如“所有判断题都划证据”。",
+    ],
+    tryNow: "拿今天的一道错题填完四格，最后写一句不超过 12 个字的提醒。",
+    doneWhen: "周末能说出最高频错因，并把它变成下周一个具体动作。",
+    source: "practice",
+  },
+];
+
 function task(id, week, day, subject, title, output, duration, course, part, reviewable = true) {
   return { id, week, day, subject, title, output, duration, course, part, reviewable };
 }
@@ -291,6 +535,8 @@ function getDefaultState() {
     view: "today",
     reviewFilter: "due",
     libraryFilter: "all",
+    triedTips: {},
+    tipsFilter: "all",
   };
 }
 
@@ -304,6 +550,7 @@ function loadState() {
       completedTasks: saved.completedTasks || {},
       completedTaskTimes: saved.completedTaskTimes || {},
       completedReviews: saved.completedReviews || {},
+      triedTips: saved.triedTips || {},
     };
   } catch {
     return getDefaultState();
@@ -314,6 +561,8 @@ let state = loadState();
 let resetArmed = false;
 let resetTimer = null;
 let toastTimer = null;
+let pickedTipId = null;
+let pickedTipTimer = null;
 
 const els = {
   startDate: document.querySelector("#startDate"),
@@ -335,6 +584,15 @@ const els = {
   reviewSummary: document.querySelector("#reviewSummary"),
   libraryFilters: document.querySelector("#libraryFilters"),
   courseGrid: document.querySelector("#courseGrid"),
+  tipsFilters: document.querySelector("#tipsFilters"),
+  tipsGrid: document.querySelector("#tipsGrid"),
+  tipsSources: document.querySelector("#tipsSources"),
+  tipsSummary: document.querySelector("#tipsSummary"),
+  tipsTriedCount: document.querySelector("#tipsTriedCount"),
+  tipsTotalCount: document.querySelector("#tipsTotalCount"),
+  tipsProgress: document.querySelector(".tips-progress"),
+  tipsProgressValue: document.querySelector("#tipsProgressValue"),
+  pickRandomTip: document.querySelector("#pickRandomTip"),
   resetProgress: document.querySelector("#resetProgress"),
   toast: document.querySelector("#toast"),
 };
@@ -436,6 +694,7 @@ function getStreak() {
   const completionDates = [
     ...Object.values(state.completedTasks),
     ...Object.values(state.completedReviews),
+    ...Object.values(state.triedTips),
   ].filter((value) => /^\d{4}-\d{2}-\d{2}$/.test(value));
   if (!completionDates.length) return 0;
 
@@ -799,6 +1058,132 @@ function renderLibrary() {
   `).join("");
 }
 
+function renderTips() {
+  const filters = [
+    ["all", "全部"],
+    ...Object.entries(TIP_CATEGORIES).map(([value, config]) => [value, config.label]),
+  ];
+  els.tipsFilters.innerHTML = filters.map(([value, label]) => `
+    <button class="tips-filter${state.tipsFilter === value ? " is-active" : ""}" type="button" data-tips-filter="${value}">${label}</button>
+  `).join("");
+
+  const triedCount = STUDY_TIPS.filter((tip) => state.triedTips[tip.id]).length;
+  const progressPercent = Math.round((triedCount / STUDY_TIPS.length) * 100);
+  els.tipsTriedCount.textContent = triedCount;
+  els.tipsTotalCount.textContent = STUDY_TIPS.length;
+  els.tipsProgress.setAttribute("aria-valuemax", String(STUDY_TIPS.length));
+  els.tipsProgress.setAttribute("aria-valuenow", String(triedCount));
+  els.tipsProgressValue.style.width = `${progressPercent}%`;
+
+  const tips = STUDY_TIPS.filter(
+    (tip) => state.tipsFilter === "all" || tip.category === state.tipsFilter,
+  );
+  const untriedInView = tips.filter((tip) => !state.triedTips[tip.id]).length;
+  els.tipsSummary.textContent = `当前 ${tips.length} 个 · 还有 ${untriedInView} 个未尝试`;
+
+  els.tipsGrid.innerHTML = tips.map((tip) => {
+    const category = TIP_CATEGORIES[tip.category];
+    const source = TIP_SOURCES[tip.source];
+    const tried = Boolean(state.triedTips[tip.id]);
+    const number = String(STUDY_TIPS.findIndex((entry) => entry.id === tip.id) + 1).padStart(2, "0");
+    return `
+      <article
+        class="tip-card${tried ? " is-tried" : ""}${pickedTipId === tip.id ? " is-picked" : ""}"
+        id="tip-${tip.id}"
+        data-tip-card="${tip.id}"
+        style="--tip-color: ${category.color}"
+        tabindex="-1"
+      >
+        <div class="tip-card-top">
+          <span class="tip-category"><i aria-hidden="true"></i>${category.en} · ${category.label}</span>
+          <span class="tip-number">#${number}</span>
+        </div>
+        <h3>${tip.title}</h3>
+        <p class="tip-summary">${tip.summary}</p>
+        <div class="tip-why">
+          <strong>它在帮你什么？</strong>
+          <p>${tip.why}</p>
+        </div>
+        <div class="tip-steps">
+          <div class="tip-block-heading"><span>照着做</span><small>约 ${tip.minutes} 分钟</small></div>
+          <ol>
+            ${tip.steps.map((step, index) => `<li><b>${index + 1}</b><span>${step}</span></li>`).join("")}
+          </ol>
+        </div>
+        <div class="tip-try">
+          <strong>现在试一下</strong>
+          <p>${tip.tryNow}</p>
+        </div>
+        <p class="tip-done"><span aria-hidden="true">✓</span><strong>完成标准：</strong>${tip.doneWhen}</p>
+        <div class="tip-card-footer">
+          <a href="${source.url}" target="_blank" rel="noopener noreferrer" aria-label="在 GitHub 查看来源 ${source.repo}">
+            GitHub 来源 <span aria-hidden="true">↗</span>
+          </a>
+          <button
+            class="tip-check${tried ? " is-active" : ""}"
+            type="button"
+            data-tip-id="${tip.id}"
+            aria-pressed="${tried}"
+            aria-label="${tried ? `取消已尝试：${tip.title}` : `标记已尝试：${tip.title}`}"
+          >${tried ? "✓ 已尝试" : "标记已尝试"}</button>
+        </div>
+      </article>
+    `;
+  }).join("");
+
+  els.tipsSources.innerHTML = Object.values(TIP_SOURCES).map((source, index) => `
+    <article class="source-card">
+      <span>${String(index + 1).padStart(2, "0")}</span>
+      <div>
+        <h4>${source.name}</h4>
+        <code>${source.repo}</code>
+        <p>${source.note}</p>
+        <a href="${source.url}" target="_blank" rel="noopener noreferrer">打开 GitHub 仓库 <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+  `).join("");
+}
+
+function toggleTip(id) {
+  const tip = STUDY_TIPS.find((entry) => entry.id === id);
+  if (!tip) return;
+  if (state.triedTips[id]) {
+    delete state.triedTips[id];
+    showToast(`已取消“${tip.title}”的尝试记录。`);
+  } else {
+    state.triedTips[id] = toISO(startOfToday());
+    showToast(`已记录“${tip.title}”。下次可以换一张卡。`);
+  }
+  saveState();
+  renderProgress();
+  renderTips();
+  requestAnimationFrame(() => document.querySelector(`[data-tip-id="${id}"]`)?.focus());
+}
+
+function pickRandomTip() {
+  const visibleTips = STUDY_TIPS.filter(
+    (tip) => state.tipsFilter === "all" || tip.category === state.tipsFilter,
+  );
+  const untriedTips = visibleTips.filter((tip) => !state.triedTips[tip.id]);
+  const pool = untriedTips.length ? untriedTips : visibleTips;
+  if (!pool.length) return;
+
+  const tip = pool[Math.floor(Math.random() * pool.length)];
+  pickedTipId = tip.id;
+  clearTimeout(pickedTipTimer);
+  renderTips();
+  requestAnimationFrame(() => {
+    const card = document.querySelector(`[data-tip-card="${tip.id}"]`);
+    card?.focus({ preventScroll: true });
+    card?.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+  pickedTipTimer = setTimeout(() => {
+    pickedTipId = null;
+    document.querySelector(`[data-tip-card="${tip.id}"]`)?.classList.remove("is-picked");
+  }, 2200);
+  showToast(`今天先试：${tip.title}`);
+}
+
 function switchView(view, shouldScroll = true) {
   state.view = view;
   saveState();
@@ -814,6 +1199,7 @@ function switchView(view, shouldScroll = true) {
   if (view === "plan") renderPlan();
   if (view === "review") renderReviews();
   if (view === "library") renderLibrary();
+  if (view === "tips") renderTips();
   if (shouldScroll) document.querySelector(".content-stage").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -858,6 +1244,7 @@ function renderAll(shouldScroll = false) {
   renderPlan();
   renderReviews();
   renderLibrary();
+  renderTips();
   switchView(state.view, shouldScroll);
 }
 
@@ -907,6 +1294,21 @@ document.addEventListener("click", (event) => {
     state.libraryFilter = libraryFilter.dataset.libraryFilter;
     saveState();
     renderLibrary();
+    return;
+  }
+
+  const tipsFilter = event.target.closest("[data-tips-filter]");
+  if (tipsFilter) {
+    state.tipsFilter = tipsFilter.dataset.tipsFilter;
+    pickedTipId = null;
+    saveState();
+    renderTips();
+    return;
+  }
+
+  const tipButton = event.target.closest("[data-tip-id]");
+  if (tipButton) {
+    toggleTip(tipButton.dataset.tipId);
   }
 });
 
@@ -917,6 +1319,7 @@ document.querySelector(".brand").addEventListener("click", (event) => {
 });
 
 document.querySelector("#jumpToday").addEventListener("click", () => switchView("today"));
+els.pickRandomTip.addEventListener("click", pickRandomTip);
 
 els.startDate.addEventListener("change", () => {
   if (!els.startDate.value) return;
@@ -940,6 +1343,8 @@ els.resetProgress.addEventListener("click", () => {
   }
 
   state = getDefaultState();
+  pickedTipId = null;
+  clearTimeout(pickedTipTimer);
   resetArmed = false;
   clearTimeout(resetTimer);
   els.resetProgress.textContent = "重置所有进度";

@@ -6,6 +6,7 @@
 | --- | --- |
 | 中文名称 | 雅思备考清单 |
 | GitHub 仓库名 | `like-ielts-zixue` |
+| 当前版本 | `1.1.0` |
 | 项目类型 | 无框架静态前端 |
 | 页面入口 | `index.html` |
 | 本地服务器 | `server.mjs` |
@@ -48,12 +49,16 @@ npm run check
 - `WEEKS`：8 周阶段目标、周目标和验收标准。
 - `TASKS`：40 项课程与周验收任务，包括周次、日期、时长和课程分 P。
 - `REVIEW_STAGES`：六个艾宾浩斯复习节点、建议时长和复习动作。
+- `TIP_CATEGORIES`：学习小技巧的分类、缩写和颜色。
+- `TIP_SOURCES`：公开 GitHub 参考项目、仓库链接和来源说明。
+- `STUDY_TIPS`：12 个方法卡的解释、步骤、立即练习、完成标准和来源。
 
 界面内容分工：
 
 - `index.html`：页面结构、学习法说明和导航。
 - `styles.css`：桌面、平板和手机端样式。
 - `app.js`：日期计算、课程打卡、复习队列、筛选和本地保存。
+- “学习小技巧”视图：支持分科筛选、随机选择、来源直达和已尝试记录。
 
 ## 本地存储结构
 
@@ -68,13 +73,17 @@ npm run check
   "selectedWeek": 1,
   "view": "today",
   "reviewFilter": "due",
-  "libraryFilter": "all"
+  "libraryFilter": "all",
+  "triedTips": {},
+  "tipsFilter": "all"
 }
 ```
 
 - `completedTasks` 保存任务完成日期。
 - `completedTaskTimes` 保存精确完成时间，用于计算 T+20 分钟节点。
 - `completedReviews` 保存复习打卡日期。
+- `triedTips` 保存已尝试学习方法及其日期。
+- `tipsFilter` 保存学习小技巧当前分类。
 - 所有数据都只存在于用户当前浏览器中。
 
 ## GitHub Pages 配置
@@ -120,8 +129,9 @@ courseKey: {
 ## 发布前检查
 
 1. 运行 `npm run check`。
-2. 打开首页，检查今日、8 周计划、学习法、复习队列和课程库。
+2. 打开首页，检查今日、8 周计划、学习法、复习队列、课程库和学习小技巧。
 3. 完成一节核心课，确认生成 6 个复习节点。
 4. 检查 B 站链接是否仍公开可用。
-5. 在手机宽度下检查导航、任务卡片和复习卡片。
-6. 推送到 `main`，等待 GitHub Pages 工作流完成。
+5. 在学习小技巧中检查分类、“帮我选一个”、GitHub 来源和已尝试状态。
+6. 在手机宽度下检查导航、任务卡片、复习卡片和方法卡片。
+7. 推送到 `main`，等待 GitHub Pages 工作流完成。

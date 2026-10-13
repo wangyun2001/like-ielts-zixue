@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="雅思备考清单：八周 B 站公开课学习计划，含周目标、打卡、课程直达与艾宾浩斯复习队列。"
+      content="雅思备考清单：八周 B 站公开课学习计划，含周目标、打卡、课程直达、艾宾浩斯复习队列与 GitHub 学习小技巧。"
     />
     <meta name="theme-color" content="#f2efe7" />
     <title>雅思备考清单｜8周公开课学习计划</title>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css?v=4" />
-    <script src="./app.js?v=3" defer></script>
+    <link rel="stylesheet" href="./styles.css?v=5" />
+    <script src="./app.js?v=4" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#mainContent">跳到主要内容</a>
@@ -41,6 +41,9 @@
           </button>
           <button class="nav-button" type="button" data-view="library">
             课程库
+          </button>
+          <button class="nav-button" type="button" data-view="tips">
+            学习小技巧
           </button>
         </nav>
 
@@ -365,13 +368,67 @@
             <div class="library-filters" id="libraryFilters" role="group" aria-label="课程分类"></div>
             <div class="course-grid" id="courseGrid"></div>
           </section>
+
+          <section class="view" id="tipsView" data-view-panel="tips" aria-labelledby="tipsHeading" hidden>
+            <div class="section-heading tips-heading-row">
+              <div>
+                <p class="section-kicker">GITHUB STUDY TRICKS</p>
+                <h2 id="tipsHeading">一次只试一个小技巧</h2>
+              </div>
+              <p class="section-intro">
+                从公开 GitHub 雅思项目中整理出 12 个实用方法，再拆成“看懂—照做—检查”三步。每次选一张卡，做完再标记。
+              </p>
+            </div>
+
+            <div class="tips-hero">
+              <div class="tips-hero-copy">
+                <span class="tips-hero-tag">START SMALL · FINISH ONE</span>
+                <h3>看懂 <span>→</span> 照做 <span>→</span> 检查</h3>
+                <p>
+                  不需要一次学会全部方法。先选最困扰你的问题，照卡片做 10–20 分钟，再用“完成标准”检查自己。
+                </p>
+                <button class="button button-light" id="pickRandomTip" type="button">
+                  帮我选一个 <span aria-hidden="true">↗</span>
+                </button>
+              </div>
+              <div class="tips-hero-guide" aria-label="使用学习小技巧的三个步骤">
+                <div><strong>01</strong><span>选一张</span><p>按科目筛选，或让系统帮你选。</p></div>
+                <div><strong>02</strong><span>马上做</span><p>只准备纸、笔、计时器和一道题。</p></div>
+                <div><strong>03</strong><span>打个勾</span><p>达到卡片标准后，标记“已尝试”。</p></div>
+                <div class="tips-score">
+                  <span>已尝试</span>
+                  <strong><b id="tipsTriedCount">0</b> / <b id="tipsTotalCount">12</b></strong>
+                  <div class="tips-progress" role="progressbar" aria-label="小技巧尝试进度" aria-valuemin="0" aria-valuemax="12" aria-valuenow="0">
+                    <span id="tipsProgressValue"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tips-toolbar">
+              <div class="tips-filters" id="tipsFilters" role="group" aria-label="学习小技巧分类"></div>
+              <p id="tipsSummary" aria-live="polite">共 12 个方法</p>
+            </div>
+            <div class="tips-grid" id="tipsGrid"></div>
+
+            <section class="tips-sources" aria-labelledby="tipsSourcesHeading">
+              <div class="subsection-heading">
+                <div>
+                  <span>OPEN-SOURCE TRAIL</span>
+                  <h3 id="tipsSourcesHeading">方法从哪里来</h3>
+                </div>
+                <p>下面列出整理时参考的公开 GitHub 项目。卡片内容均为重新归纳的学习步骤，可点击仓库继续查看原项目。</p>
+              </div>
+              <div class="source-grid" id="tipsSources"></div>
+            </section>
+          </section>
         </section>
       </main>
 
       <footer class="site-footer">
         <div>
           <strong>雅思备考清单</strong>
-          <span>8 周公开课学习计划 · 浏览器本地保存</span>
+          <span>8 周公开课计划 · 艾宾浩斯复习 · 学习小技巧</span>
         </div>
         <p>课程为学习路径参考；最终练习请以当季考试要求与官方样题为准。</p>
         <button id="resetProgress" class="footer-reset" type="button">重置所有进度</button>
